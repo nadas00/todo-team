@@ -49,9 +49,15 @@ class RegistrationForm(Form):
         validators.EqualTo('confirm', message='Parolalar eşleşmiyor...')])
     confirm = PasswordField('Parola Doğrula', validators = [validators.DataRequired()])
 
+
 class LoginForm(Form):
     username = StringField('Kullanıcı Adı', validators = [validators.DataRequired()])
     password = PasswordField('Parola', validators = [validators.DataRequired()])
+
+
+class CreateTodoForm(Form):
+    title = StringField('Başlık', validators = [validators.DataRequired(), validators.Length(min = 3, max = 30)])
+    description = StringField('Açıklama', validators = [validators.DataRequired(),validators.Length(min = 3, max = 120)])
 
 
 
@@ -104,6 +110,28 @@ def login():
 def logout():
     session.clear()
     return redirect(url_for("index"))
+
+@app.route('/createtodo', methods = ["POST", "GET"])
+def createtodo():
+    form = CreateTodoForm(request.form)
+    if request.method == "POST" and form.validate():
+        todo = Todo(title=form.title.data,owner_id=session["logged_user"],description=form.description.data)
+        db.session.add(todo)
+        db.session.commit()
+        flash("Sana iş çıktı! ToDo başarıyla oluşturuldu!","info")
+        return redirect(url_for("listtodo"))
+    else:
+        return render_template("createtodo.html",form=form)
+
+@app.route('/listtodo')
+def listtodo():
+    query = Todo.query.filter_by(owner_id = session["logged_user"])
+    try:
+        todos = query.all()
+    except:
+        flash("Buralar eskiden hep dutluktu... Hala da öyle...","warning")
+        return redirect(url_for("createtodo"))
+    return render_template("listtodo.html",todos = todos)
 
 
 if __name__ == "__main__":  

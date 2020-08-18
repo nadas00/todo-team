@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block title %}
+    ToDo oluştur
+{% endblock %}
+{% block body %}
+
+   {% from "includes/formhelpers.html" import render_field %}
+<form method=post>
+  <dl>
+   {{ render_field(form.title,class="form-control") }}
+    {{ render_field(form.description,class="form-control") }}
+  </dl>
+ <button class="btn btn-info">Oluştur</button>
+</form>
+ 
+  
+{% endblock %}
