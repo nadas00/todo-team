@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Anasayfa
+{% endblock %}
+
+{% block body %}
+ 
+    <h3>Anasayfa</h3>
+    <br><br>
+    {% from "includes/formhelpers.html" import render_field %}
+<form method=post>
+  <dl>
+    {{ render_field(form.username,class="form-control") }}
+    {{ render_field(form.email,class="form-control") }}
+    {{ render_field(form.password,class="form-control") }}
+    {{ render_field(form.confirm,class="form-control") }}
+  </dl>
+ <button class="btn btn-primary">Kayıt Ol</button>
+</form>
+{% endblock %}
