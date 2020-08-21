@@ -200,19 +200,42 @@ def showtodo(id):
 @app.route('/mine')
 @login_required
 def mine():
-   #kendisine ait todocukların idlerini bul 
-    #bu todocukları içeren todoları listele
+    # Select ToDo's if logged user have any ToDocuks related with the ToDo's
     todo_involved_me = Todocuk.query.with_entities(Todocuk.todo_id).filter_by(keeper_id = session["logged_user"]).all()
     result = [r for r, in todo_involved_me]
     query = Todo.query.filter(Todo.id.in_(result))
     minetodos = query.all()
-
+    # If there exists any ToDo related with auth user
     if bool(minetodos):
         return render_template("minetodo.html",minetodos = minetodos)
+    # If there is no ToDo related with auth user
     else:
         flash("Buralar eskiden hep dutluktu... Hala da öyle...","warning")
         return redirect(url_for("createtodo"))
-    
+
+@app.route('/delete/<string:id>')
+@login_required
+def deletetodo(id):
+    try:
+        # Do not let user delete the ToDo if user is not owner
+        if bool(Todo.query.filter_by(owner_id = session["logged_user"])).all():
+            todocuks_relatedto_todo = Todocuk.query.with_entities(Todocuk.id).filter_by(todo_id = id).all()
+            result = [r for r, in todocuks_relatedto_todo]
+            db.session.query(Todocuk).filter(Todocuk.id.in_(result)).delete(synchronize_session=False)
+            todo_deleted = Todo.query.filter_by(id = id).one()
+            title = todo_deleted.title
+            db.session.delete(todo_deleted)
+            db.session.commit()
+            flash('"'+title+'"'+" isimli ToDo silindi! Oh be!","warning")
+            return redirect(url_for('mine'))
+        else:
+            # Raise Error if user is not the owner
+            raise Exception()
+    except:
+        # If user is not the owner of query return with an error
+        flash("Bunu yapma! Yapamazsın!","warning")
+        return redirect(url_for('mine'))
+
 
 @app.route('/complete/<string:id>')
 @login_required
@@ -229,6 +252,12 @@ def completetodocuk(id):
         return redirect(url_for("mine"))
 
     return render_template("completetodocuk.html")
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
 
 if __name__ == "__main__":  
     db.create_all()
