@@ -20,29 +20,35 @@ ToDo-Team powered with:
 
 ### Screenshots
 
-![](https://i.hizliresim.com/3zqLXy.png)
 
 > Add ToDocuk to an existing ToDo, other users than owner of ToDo can reach this view without add ToDocuk panel.
 
-![](https://i.hizliresim.com/x2Mvcz.png)
+![](https://i.hizliresim.com/3zqLXy.png)
+
 
 > Rest of the view.
 
-![](https://i.hizliresim.com/DBtUqn.png)
+![](https://i.hizliresim.com/x2Mvcz.png)
+
 
 > User can see ToDos if there exist a ToDocuk in the ToDo related with their name.
 
-![](https://i.hizliresim.com/sdHuN3.png)
+![](https://i.hizliresim.com/DBtUqn.png)
+
 
 > User can see ToDos created by themselves, they can delete ToDo or go to content of ToDo for seeing ToDocuks.
 
-![](https://i.hizliresim.com/14iMbi.png)
+![](https://i.hizliresim.com/sdHuN3.png)
+
 
 > Register Page.
 
-![](https://i.hizliresim.com/IkAazn.png)
+![](https://i.hizliresim.com/14iMbi.png)
+
 
 > Login Page.
+
+![](https://i.hizliresim.com/IkAazn.png)
 
 
 
