@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    ToDo
+{% endblock %}
+
+{%if isKeeper %}
+    
+
+{% block body %}
+
+    
+{% if isAdmin %}
+
+<h3>ToDocuk ekle</h3>
+<hr>
+
+
+    
+
+
+{% from "includes/formhelpers.html" import render_field %}
+<form method=post>
+  <dl>
+    {{ render_field(form.title,class="form-control") }}
+    {{ render_field(form.description,class="form-control") }}
+    {{ render_field(form.keeper_id,class="form-control",placeholder="hasan,ahmet,mehmet") }}
+    <small>(Virgül ile ayırarak giriniz)</small>
+  </dl>
+ <button class="btn btn-info">Oluştur</button>
+</form>  
+
+
+
+
+
+<br>
+<hr>
+{% endif %}
+<br>
+{% for todocuk in todocuklar %}
+  <div class="card">
+
+  <div class="card-body">
+    <h5 class="card-title">{{ todocuk.title }}</h5>
+    <p class="card-text">{{ todocuk.description }}</p>
+    <p class="card-text"><small>Sorumlu : {{ todocuk.keeper_id}} </small></p>
+    {% if todocuk.complete %}
+     <small><p style="color:green;" class="card-text">Tamamlanmış</p></small>
+    {% else %}
+     <small><p class="card-text">Tamamlanmamış</p></small>
+    {% endif %}
+
+   
+    {% if todocuk.keeper_id == session["logged_user"] and not todocuk.complete == 1 %}
+    <a href="/complete/{{ todocuk.id }}" class="btn btn-info btn-block">Tamamla</a>
+    {% endif %}
+  </div>
+</div>
+
+<br>
+    
+{% endfor %}
+{% endblock %}
+
+
+{% endif %}
