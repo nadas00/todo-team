@@ -27,7 +27,7 @@ def logout_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if "logged_in" in session:
-            flash("Zaten giriş yaptın!","info")
+            flash("Hoşgeldiniz!","info")
             return redirect(url_for("mine"))
         else:
             return f(*args, **kwargs)
@@ -91,6 +91,7 @@ class CreateTodocukForm(Form):
 ################# ROUTES #################
 
 @app.route('/', methods = ["GET","POST"])
+@logout_required
 def index():
     form = RegistrationForm(request.form)
     if request.method == "POST" and form.validate():
@@ -218,7 +219,7 @@ def mine():
 def deletetodo(id):
     try:
         # Do not let user delete the ToDo if user is not owner
-        if bool(Todo.query.filter_by(owner_id = session["logged_user"])).all():
+        if bool(Todo.query.filter_by(owner_id = session["logged_user"]).all()):
             todocuks_relatedto_todo = Todocuk.query.with_entities(Todocuk.id).filter_by(todo_id = id).all()
             result = [r for r, in todocuks_relatedto_todo]
             db.session.query(Todocuk).filter(Todocuk.id.in_(result)).delete(synchronize_session=False)
@@ -231,7 +232,8 @@ def deletetodo(id):
         else:
             # Raise Error if user is not the owner
             raise Exception()
-    except:
+    except Exception as e:
+        print(e)
         # If user is not the owner of query return with an error
         flash("Bunu yapma! Yapamazsın!","warning")
         return redirect(url_for('mine'))
